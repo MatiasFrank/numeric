@@ -1,21 +1,11 @@
 //! Numeric Rust provides a foundation for doing scientific computing with Rust. It aims to be for
 //! Rust what Numpy is for Python.
 //!
-//! OpenBLAS/LAPACK is used to make things like matrix muliplications and solving linear equations
-//! fast.
-extern crate blas;
-extern crate lapack;
-extern crate num;
-extern crate rand;
-extern crate hdf5_sys;
-extern crate libc;
 
 pub mod traits;
 pub mod tensor;
 pub mod math;
 pub mod random;
-pub mod linalg;
-pub mod io;
 
 // Lift commonly used functions into the numeric namespace
 pub use tensor::{Tensor, AxisIndex, Ellipsis, StridedSlice, Index, Full, NewAxis};
@@ -27,5 +17,3 @@ pub use math::{log, ln, log10, log2, sin, cos, tan, asin, acos, atan, exp_m1, ex
                is_sign_positive, is_sign_negative};
 
 pub use random::RandomState;
-
-pub use linalg::diag;

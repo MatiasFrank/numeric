@@ -1,6 +1,6 @@
 use std::ops::{Index, IndexMut};
-use tensor::Tensor;
-use traits::TensorTrait;
+use crate::tensor::Tensor;
+use crate::traits::TensorTrait;
 
 // Vector indexing
 impl<'b, T: TensorTrait> Index<&'b [usize]> for Tensor<T> {

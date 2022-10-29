@@ -1,6 +1,6 @@
 use std::cmp::{PartialEq, Eq};
-use tensor::Tensor;
-use traits::TensorTrait;
+use crate::tensor::Tensor;
+use crate::traits::TensorTrait;
 
 impl<T: TensorTrait + PartialOrd> PartialEq<Tensor<T>> for Tensor<T> {
     fn eq(&self, rhs: &Tensor<T>) -> bool {

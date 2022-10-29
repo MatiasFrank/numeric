@@ -1,6 +1,6 @@
-use tensor::Tensor;
+use crate::tensor::Tensor;
 use num::traits::cast;
-use traits::NumericTrait;
+use crate::traits::NumericTrait;
 
 impl<T: NumericTrait> Tensor<T> {
     /// Returns a new tensor with the elements converted to the selected type.
@@ -15,7 +15,7 @@ impl<T: NumericTrait> Tensor<T> {
         let mut t = Tensor::zeros(&self.shape);
         {
             let n = t.size();
-            let mut data = t.slice_mut();
+            let data = t.slice_mut();
             for i in 0..n {
                 data[i] = cast(data[i]).unwrap();
             }

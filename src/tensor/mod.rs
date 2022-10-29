@@ -10,7 +10,7 @@
 use std::vec::Vec;
 use num::traits::cast;
 use std::rc::Rc;
-use traits::{TensorTrait, NumericTrait};
+use crate::traits::{TensorTrait, NumericTrait};
 use num::traits::{Zero, One};
 use std::ops::Add;
 
@@ -123,7 +123,6 @@ pub use AxisIndex::{Full, Ellipsis, NewAxis, Index, StridedSlice};
 #[macro_use]
 pub mod macros;
 
-mod dot;
 mod display;
 mod generics;
 mod summary;
@@ -564,7 +563,7 @@ impl<T: TensorTrait> Tensor<T> {
         assert!(sub.size() == other.size());
 
         self.canonize_inplace();
-        let mut data = self.slice_mut();
+        let data = self.slice_mut();
         for (i, v) in sub.iter().zip(other.iter()) {
             data[i] = v;
         }
@@ -580,7 +579,7 @@ impl<T: TensorTrait> Tensor<T> {
         let mut t = Tensor::empty(&[s]);
         let mut j = 0;
         {
-            let mut data = t.slice_mut();
+            let data = t.slice_mut();
             for (idx, v) in indices.iter().zip(self.iter()) {
                 if idx {
                     data[j] = v;
@@ -601,7 +600,7 @@ impl<T: TensorTrait> Tensor<T> {
         }
         if values.is_scalar() {
             let v = values.scalar_value();
-            let mut data = self.slice_mut();
+            let data = self.slice_mut();
             let mut j = 0;
             for idx in indices.iter() {
                 if idx {
@@ -611,7 +610,7 @@ impl<T: TensorTrait> Tensor<T> {
             }
         } else {
             assert!(values.size() == s);
-            let mut data = self.slice_mut();
+            let data = self.slice_mut();
             let mut value_iter = values.iter();
             for (i, idx) in indices.iter().enumerate() {
                 if idx {
@@ -703,17 +702,11 @@ impl<T: TensorTrait> Tensor<T> {
     }
 
     #[inline]
-    fn get2(&self, i: usize, j: usize) -> T {
-        self.data[self.mem_offset + (i as isize * self.strides[0] +
-                                     j as isize * self.strides[1]) as usize]
-    }
-
-    #[inline]
     fn set2(&mut self, i: usize, j: usize, v: T) {
         self.canonize_inplace();
         let i = self.mem_offset + (i as isize * self.strides[0] +
                                    j as isize * self.strides[1]) as usize;
-        let mut data = self.slice_mut();
+        let data = self.slice_mut();
         data[i] = v;
     }
 
@@ -726,7 +719,7 @@ impl<T: TensorTrait> Tensor<T> {
             }
         }
 
-        let mut data = self.slice_mut();
+        let data = self.slice_mut();
         for (i, v) in other.iter().enumerate() {
             data[i] = v;
         }
@@ -818,7 +811,7 @@ impl<T: TensorTrait + Num + NumCast> Tensor<T> {
         let mut fi: T = T::zero();
         let d: T = (stop - start) / (cast::<usize, T>(num).unwrap() - T::one());
         {
-            let mut data = t.slice_mut();
+            let data = t.slice_mut();
             for i in 0..num {
                 data[i] = start + fi * d;
                 fi = fi + T::one();

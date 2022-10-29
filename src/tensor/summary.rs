@@ -1,6 +1,6 @@
 use std::ops::{Add, Mul, BitAnd, BitOr, BitXor};
-use tensor::{Tensor, Full, Index};
-use traits::{NumericTrait, TensorTrait};
+use crate::tensor::{Tensor, Full, Index};
+use crate::traits::{NumericTrait, TensorTrait};
 
 impl<T: NumericTrait> Tensor<T> {
     pub fn max(&self) -> T {

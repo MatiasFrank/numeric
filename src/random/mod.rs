@@ -18,12 +18,9 @@
 //! ```
 use rand::{Rng, SeedableRng, StdRng};
 use rand::distributions::range::SampleRange;
-use num::traits::Float;
-use std::f64;
 
-use tensor::{Tensor, AxisIndex};
-use traits::NumericTrait;
-use math;
+use crate::tensor::{Tensor, AxisIndex};
+use crate::traits::NumericTrait;
 
 pub struct RandomState {
     rng: StdRng,
@@ -44,24 +41,12 @@ impl RandomState {
         let mut t = Tensor::zeros(shape);
         {
             let n = t.size();
-            let mut data = t.slice_mut();
+            let data = t.slice_mut();
             for i in 0..n {
                 data[i] = self.rng.gen_range::<T>(low, high);
             }
         }
         t
-    }
-
-    /// Generates a tensor by independently drawing samples from a standard normal.
-    pub fn normal<T>(&mut self, shape: &[usize]) -> Tensor<T>
-            where T: NumericTrait + SampleRange + Float {
-        let u1 = self.uniform(T::zero(), T::one(), shape);
-        let u2 = self.uniform(T::zero(), T::one(), shape);
-
-        let minustwo = Tensor::fscalar(-2.0);
-        let twopi = Tensor::fscalar(2.0 * f64::consts::PI);
-
-        math::sqrt(math::ln(u1) * &minustwo) * &math::cos(u2 * &twopi)
     }
 
     /// Shuffle tensor in-place along its first axis. This uses the modern version of the
@@ -72,7 +57,7 @@ impl RandomState {
             a.canonize_inplace();
             let n = a.dim(0);
             {
-                let mut data = a.mem_slice_mut();
+                let data = a.mem_slice_mut();
                 for i in (1..n).rev() {
                     let j = self.rng.gen_range::<usize>(0, i + 1);
                     data.swap(i, j);

@@ -1,4 +1,4 @@
-use tensor::Tensor;
+use crate::tensor::Tensor;
 use std::fmt;
 use num::complex::{Complex32, Complex64};
 

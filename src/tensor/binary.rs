@@ -1,5 +1,5 @@
-use tensor::Tensor;
-use traits::TensorTrait;
+use crate::tensor::Tensor;
+use crate::traits::TensorTrait;
 
 macro_rules! add_impl {
     ($new_fname:ident, $fname:ident) => (
@@ -8,7 +8,7 @@ macro_rules! add_impl {
             pub fn $new_fname(&self, rhs: &Tensor<T>) -> Tensor<bool> {
                 let mut y = Tensor::empty(&self.shape());
                 {
-                    let mut data = y.slice_mut();
+                    let data = y.slice_mut();
                     if rhs.is_scalar() {
                         let v2 = rhs.scalar_value();
                         for (i, v1) in rhs.iter().enumerate() {

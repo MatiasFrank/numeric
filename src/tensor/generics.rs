@@ -1,5 +1,5 @@
-use tensor::Tensor;
-use traits::TensorTrait;
+use crate::tensor::Tensor;
+use crate::traits::TensorTrait;
 use std::ops::{Add, Sub, Mul, Div, Rem, Neg, BitAnd, BitOr, BitXor};
 use std::cmp::max;
 
@@ -100,7 +100,7 @@ macro_rules! add_impl {
                     self.canonize_inplace();
                     {
                         let n = self.size();
-                        let mut data = self.slice_mut();
+                        let data = self.slice_mut();
                         let v: T = rhs.scalar_value() as T;
                         for i in 0..n {
                             data[i] = data[i].$func_name(v);
@@ -111,7 +111,7 @@ macro_rules! add_impl {
                     let mut t = Tensor::empty(&rhs.shape);
                     {
                         let n = t.size();
-                        let mut data = t.slice_mut();
+                        let data = t.slice_mut();
                         let v = self.scalar_value();
                         for i in 0..n {
                             data[i] = v.$func_name(rhs.data[i]);
@@ -123,7 +123,7 @@ macro_rules! add_impl {
                     {
                         let n = self.size();
                         assert_eq!(self.shape, rhs.shape);
-                        let mut data = self.slice_mut();
+                        let data = self.slice_mut();
                         for i in 0..n {
                             data[i] = data[i].$func_name(rhs.data[i]);
                         }
@@ -141,7 +141,7 @@ macro_rules! add_impl {
                     self.canonize_inplace();
                     {
                         let n = self.size();
-                        let mut data = self.slice_mut();
+                        let data = self.slice_mut();
                         let v = rhs.scalar_value();
                         for i in 0..n {
                             data[i] = data[i].$func_name(v);
@@ -152,7 +152,7 @@ macro_rules! add_impl {
                     let mut t: Tensor<T> = Tensor::empty(&rhs.shape);
                     {
                         let n = t.size();
-                        let mut data = t.slice_mut();
+                        let data = t.slice_mut();
                         let v = self.scalar_value();
                         for i in 0..n {
                             data[i] = v.$func_name(rhs.data[i]);
@@ -166,7 +166,7 @@ macro_rules! add_impl {
                     let rhs0 = rhs.canonize();
                     {
                         let n = self.size();
-                        let mut data = self.slice_mut();
+                        let data = self.slice_mut();
                         for i in 0..n {
                             data[i] = data[i].$func_name(rhs0.data[i]);
                         }
@@ -183,14 +183,14 @@ macro_rules! add_impl {
                 if rhs.is_scalar() {
                     assert!(out.shape() == self.shape());
                     let n = out.size();
-                    let mut data = out.slice_mut();
+                    let data = out.slice_mut();
                     let v = rhs.scalar_value();
                     for i in 0..n {
                         data[i] = data[i].$func_name(v);
                     }
                 } else if self.is_scalar() {
                     assert!(out.shape() == rhs.shape());
-                    let mut data = out.slice_mut();
+                    let data = out.slice_mut();
                     let v = self.scalar_value();
                     for i in 0..rhs.size() {
                         data[i] = v.$func_name(rhs.data[i]);
@@ -198,7 +198,7 @@ macro_rules! add_impl {
                 } else {
                     assert_eq!(self.shape, rhs.shape);
                     let n = out.size();
-                    let mut data = out.slice_mut();
+                    let data = out.slice_mut();
                     for i in 0..n {
                         data[i] = self.data[i].$func_name(rhs.data[i]);
                     }
@@ -214,7 +214,7 @@ macro_rules! add_impl {
                     let mut t = self.canonize();
                     {
                         let n = t.size();
-                        let mut data = t.mem_slice_mut();
+                        let data = t.mem_slice_mut();
                         let v = rhs.scalar_value();
                         for i in 0..n {
                             data[i] = data[i].$func_name(v);
@@ -225,7 +225,7 @@ macro_rules! add_impl {
                     let mut t = Tensor::empty(&rhs.shape);
                     {
                         let n = t.size();
-                        let mut data = t.mem_slice_mut();
+                        let data = t.mem_slice_mut();
                         let v = self.scalar_value();
                         for i in 0..n {
                             data[i] = v.$func_name(rhs.data[i]);
@@ -249,7 +249,7 @@ macro_rules! add_impl {
                     let mut kk = vec![0isize; ndim];
                     let mut i = 0;
                     {
-                        let mut data = t.slice_mut();
+                        let data = t.slice_mut();
                         let t1_data = t1.mem_slice();
                         let t2_data = t2.mem_slice();
                         let mut cur_dim = ndim - 1;
@@ -297,7 +297,7 @@ macro_rules! add_impl {
                 self.canonize_inplace();
                 {
                     let n = self.size();
-                    let mut data = self.slice_mut();
+                    let data = self.slice_mut();
                     for i in 0..n {
                         data[i] = data[i].$func_name(rhs);
                     }
@@ -313,7 +313,7 @@ macro_rules! add_impl {
                 let mut t = self.canonize();
                 {
                     let n = t.size();
-                    let mut data = t.mem_slice_mut();
+                    let data = t.mem_slice_mut();
                     for i in 0..n {
                         data[i] = data[i].$func_name(rhs);
                     }
@@ -342,7 +342,7 @@ impl<T: TensorTrait + Neg<Output=T>> Neg for Tensor<T> {
         self.canonize_inplace();
         {
             let n = self.size();
-            let mut data = self.slice_mut();
+            let data = self.slice_mut();
             for i in 0..n {
                 data[i] = -data[i];
             }
@@ -357,7 +357,7 @@ impl<'a, T: TensorTrait + Neg<Output=T>> Neg for &'a Tensor<T> {
     fn neg(self) -> Self::Output {
         let mut t = Tensor::empty(&self.shape);
         {
-            let mut data = t.slice_mut();
+            let data = t.slice_mut();
             for (i, v) in self.iter().enumerate() {
                 data[i] = -v;
             }

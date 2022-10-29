@@ -1,5 +1,5 @@
-use tensor::Tensor;
-use traits::TensorTrait;
+use crate::tensor::Tensor;
+use crate::traits::TensorTrait;
 
 impl<T: TensorTrait> Tensor<T> {
     pub fn concat(lhs: &Tensor<T>, rhs: &Tensor<T>, axis: usize) -> Tensor<T> {
