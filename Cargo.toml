@@ -1,22 +1,18 @@
 [package]
 name = "numeric"
-version = "0.1.4"
+version = "0.1.0"
 authors = ["Gustav Larsson <gustav.m.larsson@gmail.com>"]
 description = "N-dimensional matrix class for Rust"
 repository = "https://github.com/numeric-rust/numeric"
-homepage = "http://numeric.rs"
 documentation = "http://numeric.rs/doc/numeric/index.html"
 readme = "README.md"
 keywords = ["numeric", "tensor", "matrix", "vector", "hdf5"]
 license = "MIT"
+edition = "2021"
 
 [dependencies]
-blas = "0.9.1"
-lapack = "0.8.1"
-num = "0.1.29"
-rand = "0.3.12"
-libc = "0.2.4"
-hdf5-sys = "0.3.2"
+num = "0.4.0"
+rand = "0.8.5"
 
 [[test]]
 name = "numeric"

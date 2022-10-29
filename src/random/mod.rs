@@ -16,8 +16,8 @@
 //! //  0.702227 0.346673 0.737954
 //! // [Tensor<f64> of shape 3x3]
 //! ```
-use rand::{Rng, SeedableRng, StdRng};
-use rand::distributions::range::SampleRange;
+use rand::{Rng, SeedableRng, rngs::StdRng};
+use rand::distributions::uniform::SampleUniform;
 
 use crate::tensor::{Tensor, AxisIndex};
 use crate::traits::NumericTrait;
@@ -30,20 +30,19 @@ impl RandomState {
     /// Creates a new `RandomState` object with the given seed. The object needs to be captured
     /// as mutable in order to draw samples from it (since its internal state changes).
     pub fn new(seed: usize) -> RandomState {
-        let ss: &[_] = &[seed];
-        RandomState{rng: SeedableRng::from_seed(ss)}
+        RandomState{rng: SeedableRng::seed_from_u64(seed as u64)}
     }
 
     /// Generates a tensor by independently drawing samples from a uniform distribution in the 
     /// range [`low`, `high`). This is appropriate for integer types as well.
     pub fn uniform<T>(&mut self, low: T, high: T, shape: &[usize]) -> Tensor<T>
-            where T: NumericTrait + SampleRange {
+            where T: NumericTrait + SampleUniform {
         let mut t = Tensor::zeros(shape);
         {
             let n = t.size();
             let data = t.slice_mut();
             for i in 0..n {
-                data[i] = self.rng.gen_range::<T>(low, high);
+                data[i] = self.rng.gen_range(low..high);
             }
         }
         t
@@ -59,7 +58,7 @@ impl RandomState {
             {
                 let data = a.mem_slice_mut();
                 for i in (1..n).rev() {
-                    let j = self.rng.gen_range::<usize>(0, i + 1);
+                    let j = self.rng.gen_range(0..i + 1);
                     data.swap(i, j);
                 }
             }
@@ -73,7 +72,7 @@ impl RandomState {
             let mut row1: Tensor<T> = Tensor::empty(&row_shape[..]);
             let mut row2: Tensor<T> = Tensor::empty(&row_shape[..]);
             for i in (1..n).rev() {
-                let j: usize = self.rng.gen_range::<usize>(0, i + 1);
+                let j: usize = self.rng.gen_range(0..i + 1);
                 // TODO: Can be made faster.
                 // Rust requires us to have two buffers instead of just one, but
                 // we can probably make it even faster by shuffling indices first
